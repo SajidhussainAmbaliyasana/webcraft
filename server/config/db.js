@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const connectDb = async()=>{
     try {
         
-        const connectionString = "mongodb://127.0.0.1:27017/Webcraft"
+        const connectionString = process.env.MONGO_DB_URL;
 
         const connect = await mongoose.connect(connectionString)
 

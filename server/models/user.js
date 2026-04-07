@@ -1,73 +1,88 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-    firstName:{
-        type:String,
-        required:true,
-        trim:true,
-        maxlength:50
+    firstName: {
+        type: String,
+        required: true,
+        trim: true,
+        maxlength: 50
     },
-    lastName:{
-        type:String,
-        required:true,
-        maxlength:50
+    lastName: {
+        type: String,
+        required: true,
+        maxlength: 50
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true,
-        trim:true,
-        index:true
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        index: true
     },
-    username:{
-        type:String,
-        unique:true,
-        trim:true,
-        lowercase:true
+    username: {
+        type: String,
+        unique: true,
+        trim: true,
+        lowercase: true
     },
-    phone:{
-        type:String,
-        required:true,
+    phone: {
+        type: String,
+        required: true,
 
     },
-    profileImage:{
-        type:String,
-        default:null
+    profileImage: {
+        type: String,
+        default: null
     },
-    password:{
-        type:String,
-        required:function(){
+    password: {
+        type: String,
+        required: function () {
             return this.provider === "local";
         },
-        select:false
+        select: false
     },
-    provider:{
-        type:String,
-        enum:["local","google"],
-        default:"local"
+    provider: {
+        type: String,
+        enum: ["local", "google"],
+        default: "local"
     },
-    providerId:{
-        type:String,
-        default:null
+    providerId: {
+        type: String,
+        default: null
     },
-    role:{
-        type:String,
-        enum:["user","super_admin"],
-        default:"user"
+    role: {
+        type: String,
+        enum: ["user", "super_admin"],
+        default: "user"
     },
-    status:{
-        type:String,
-        enum:["active","pending","suspended"],
-        default:"pending",
-        index:true
+    status: {
+        type: String,
+        enum: ["active", "pending", "suspended"],
+        default: "pending",
+        index: true
     },
-    isEmailVerified:{
-        type:Boolean,
-        default:false
+    isEmailVerified: {
+        type: Boolean,
+        default: false
     },
     lastLoginAt: {
         type: Date
+    },
+    subscription: {
+        plan: {
+            type: String,
+            enum: ["free", "pro", "business"],
+            default: "free"
+        },
+        startedAt: {
+            type: Date,
+            default: Date.now
+        },
+        expiresAt: {
+            type: Date,
+            default: null
+        }
     },
     currentWebsiteId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -84,7 +99,7 @@ const UserSchema = new mongoose.Schema({
         default: null
     }
 
-},{
+}, {
     timestamps: true,
     toJSON: {
         transform(doc, ret) {
@@ -103,6 +118,6 @@ const UserSchema = new mongoose.Schema({
 })
 
 
-const User = mongoose.model("user",UserSchema)
+const User = mongoose.model("user", UserSchema)
 
 export default User
