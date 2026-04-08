@@ -10,10 +10,10 @@ const websiteSchema = new mongoose.Schema({
     slug: {
         type: String,
         required: true,
-        unique: true,
+        //unique: true,
         lowercase: true,
         trim: true,
-        index: true
+        //index: true
     },
     description: {
         type: String,
@@ -45,16 +45,10 @@ const websiteSchema = new mongoose.Schema({
         ref: "Theme",
         default: null
     },
-    status: {
-        type: String,
-        enum: ["draft", "active", "archived"],
-        default: "draft",
-        index: true
-    },
     visibility: {
         type: String,
         enum: ["public", "private"],
-        default: "public"
+        default: "private"
     },
     currentPublishedVersion: {
         type: Number,
@@ -94,7 +88,11 @@ const websiteSchema = new mongoose.Schema({
 
 
 websiteSchema.index({ ownerId: 1, isDeleted: 1 });
-websiteSchema.index({ slug: 1, isDeleted: 1 });
+// websiteSchema.index({ slug: 1, isDeleted: 1 });
+websiteSchema.index(
+    { slug: 1, isDeleted: 1 },
+    { unique: true }
+);
 
 const Website = mongoose.model("Website", websiteSchema);
 
