@@ -12,6 +12,7 @@ import helmet from "helmet";
 //routes
 import user from './routes/user.js';
 import website from './routes/website.js';
+import page from './routes/page.js';
 
 
 app.use(
@@ -33,6 +34,7 @@ connectDb();
 
 app.use('/api/user',user);
 app.use('/api/website',website);
+app.use('/api/pages',page);
 
 
 app.listen(port,()=>{

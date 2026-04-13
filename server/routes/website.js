@@ -9,6 +9,7 @@ import deleteWebsite from '../controllers/website/deleteWebsite.js';
 import getPublicWebsite from '../controllers/website/getPublicWebsite.js';
 import toggleWebsiteVisibility from '../controllers/website/toggelWebsiteVisibility.js';
 import updateWebsite from '../controllers/website/updateWebsite.js';
+import getWebsitePages from '../controllers/website/getAllPage.js';
 //middlewares
 import auth from '../middlewares/auth.js';
 
@@ -28,5 +29,7 @@ router.get("/slug/:slug",getPublicWebsite);
 router.patch("/:id/visibility",auth,toggleWebsiteVisibility);
 
 router.put("/:id",auth,updateWebsite);
+ 
+router.get("/:websiteId/pages", auth, getWebsitePages);
 
 export default router;

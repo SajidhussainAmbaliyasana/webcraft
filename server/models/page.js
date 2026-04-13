@@ -46,7 +46,7 @@ const pageSchema = new mongoose.Schema({
     },
     order: {
         type: Number,
-        required: true,
+        default:1,
         min: 1
     },
     lastSavedAt: {
