@@ -13,6 +13,7 @@ import helmet from "helmet";
 import user from './routes/user.js';
 import website from './routes/website.js';
 import page from './routes/page.js';
+import component from './routes/component.js';
 
 
 app.use(
@@ -35,6 +36,7 @@ connectDb();
 app.use('/api/user',user);
 app.use('/api/website',website);
 app.use('/api/pages',page);
+app.use('/api/pages',component);
 
 
 app.listen(port,()=>{

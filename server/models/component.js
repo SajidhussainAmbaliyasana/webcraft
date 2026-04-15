@@ -1,10 +1,17 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const componentSchema = new mongoose.Schema({
-    sectionId: {
+    pageId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Section",
+        ref: "Page",
         required: true,
+        index: true
+    },
+
+    parentComponentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Component",
+        default: null,
         index: true
     },
 
@@ -23,7 +30,6 @@ const componentSchema = new mongoose.Schema({
 
     data: {
         type: mongoose.Schema.Types.Mixed,
-        required: true,
         default: {}
     },
 
@@ -59,16 +65,22 @@ const componentSchema = new mongoose.Schema({
     }
 });
 
-// prevent duplicate order inside same section
 componentSchema.index(
-    { sectionId: 1, order: 1 },
+    {
+        pageId: 1,
+        parentComponentId: 1,
+        order: 1,
+        isDeleted: 1
+    },
     { unique: true }
 );
 
-// helpful when loading visible components in correct order
-componentSchema.index(
-    { sectionId: 1, isDeleted: 1, isVisible: 1, order: 1 }
-);
+componentSchema.index({
+    pageId: 1,
+    isDeleted: 1,
+    isVisible: 1,
+    order: 1
+});
 
 const Component = mongoose.model("Component", componentSchema);
 

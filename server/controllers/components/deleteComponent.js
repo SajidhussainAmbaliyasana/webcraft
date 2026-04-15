@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 import Page from "../../models/page.js";
 import Component from "../../models/component.js";
 
-const deletePage = async (req, res) => {
+const deleteComponent = async (req, res) => {
     try {
-        const { pageId } = req.params;
+        const { pageId, componentId } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(pageId)) {
             return res.status(400).json({
@@ -13,12 +13,17 @@ const deletePage = async (req, res) => {
             });
         }
 
-        const pageObjectId = new mongoose.Types.ObjectId(pageId);
+        if (!mongoose.Types.ObjectId.isValid(componentId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid component id"
+            });
+        }
 
         const page = await Page.findOne({
-            _id: pageObjectId,
+            _id: pageId,
             isDeleted: false
-        }).select("isHomePage");
+        }).select("_id");
 
         if (!page) {
             return res.status(404).json({
@@ -27,16 +32,10 @@ const deletePage = async (req, res) => {
             });
         }
 
-        if (page.isHomePage) {
-            return res.status(400).json({
-                success: false,
-                message: "Homepage cannot be deleted"
-            });
-        }
-
-        await Component.updateMany(
+        const component = await Component.findOneAndUpdate(
             {
-                pageId: pageObjectId,
+                _id: componentId,
+                pageId,
                 isDeleted: false
             },
             {
@@ -44,30 +43,27 @@ const deletePage = async (req, res) => {
                     isDeleted: true,
                     deletedAt: new Date()
                 }
-            }
-        );
-
-        await Page.updateOne(
-            {
-                _id: pageObjectId,
-                isDeleted: false
             },
             {
-                $set: {
-                    isDeleted: true,
-                    deletedAt: new Date(),
-                    lastSavedAt: new Date()
-                }
+                returnDocument: "after",
+                select: "_id"
             }
-        );
+        ).lean();
+
+        if (!component) {
+            return res.status(404).json({
+                success: false,
+                message: "Component not found"
+            });
+        }
 
         return res.status(200).json({
             success: true,
-            message: "Page and related components deleted successfully"
+            message: "Component deleted successfully"
         });
 
     } catch (error) {
-        console.error("Delete page error:", error);
+        console.error("Delete component error:", error);
 
         return res.status(500).json({
             success: false,
@@ -76,4 +72,4 @@ const deletePage = async (req, res) => {
     }
 };
 
-export default deletePage;
+export default deleteComponent;
