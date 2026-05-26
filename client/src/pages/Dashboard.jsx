@@ -1,11 +1,58 @@
-import React from 'react'
+import { Box, Toolbar } from "@mui/material";
+
+import { useSelector } from "react-redux";
+
+import Sidebar from "../components/SideBar";
+import TopNavbar from "../components/TopNavbar";
+
+import DashboardD from "../components/DashboardD";
+
+import { selectSidebarCollapsed } from "../redux/slices/uiSlice";
+
+import { COLORS } from "../theme";
 
 const Dashboard = () => {
-  return (
-    <div>
-      <p>this is dashboard</p>
-    </div>
-  )
-}
+  const collapsed = useSelector(selectSidebarCollapsed);
 
-export default Dashboard
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        background: COLORS.bg,
+      }}
+    >
+      <Sidebar />
+
+      <Box
+        component="main"
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0,
+          width: 0, // forces flex child not to overflow
+        }}
+      >
+        <TopNavbar pageTitle="Dashboard" />
+
+        <Toolbar sx={{ minHeight: "60px !important" }} />
+
+        <Box
+          sx={{
+            flex: 1,
+            p: { xs: 2.5, md: 4 },
+            overflowY: "auto",
+            overflowX: "hidden",
+            width: "100%",
+            boxSizing: "border-box",
+          }}
+        >
+          <DashboardD />
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+export default Dashboard;
