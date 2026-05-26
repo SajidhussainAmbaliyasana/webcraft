@@ -16,7 +16,7 @@ const login = async (req, res) => {
             username: username.toLowerCase(),
             isDeleted: false
         }).select("+password");
-
+  
         //user not found
         if (!user) {
             return res.status(401).json({ message: "Invalid username or password", success: false });

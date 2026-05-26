@@ -1,16 +1,20 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import LandingPage from './pages/LandingPage'
+import AppRoutes from './app/AppRoutes'
+import GlobalSnackbar from './components/common/GlobalSnackbar'
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import theme from "./theme";
 import './style.css'
 
 const App = () => {
     return (
         <>
-            <BrowserRouter>
-                <Routes>
-                    <Route path='/' element={<LandingPage/>}/>
-                </Routes>
-            </BrowserRouter>
+            <ThemeProvider theme={theme}>
+                <CssBaseline/>
+                <AppRoutes />
+                <GlobalSnackbar />
+
+            </ThemeProvider>
+
         </>
     )
 }
