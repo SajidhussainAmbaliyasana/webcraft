@@ -14,6 +14,7 @@ import me from '../controllers/user/me.js';
 import refreshToken from '../controllers/user/refershToken.js';
 import getAllUsers from '../controllers/user/alluser.js';
 import getSingleUser from '../controllers/user/getSingleUser.js';
+import stats from '../controllers/user/stats.js';
 
 
 router.post('/register',register);
@@ -23,6 +24,8 @@ router.post('/login',login);
 router.post('/logout',logout);
 
 router.post('/me',auth,me);
+
+router.post('/stats',auth,stats);
 
 router.post("/refresh-token",refreshToken);
 

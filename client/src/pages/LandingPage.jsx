@@ -1,4 +1,5 @@
 import { useState, useEffect} from "react";
+import {useNavigate} from 'react-router-dom'
 
 const NAV_LINKS = ["Features", "Pricing", "Templates", "Docs"];
 
@@ -124,7 +125,7 @@ function Nav() {
         ))}
       </div>
       <div style={{ display: "flex", gap: 12 }}>
-        <button style={{ padding: "8px 18px", borderRadius: 8, background: "transparent", border: "1px solid rgba(99,179,237,0.25)", color: "rgba(232,244,253,0.7)", fontSize: 13, cursor: "pointer", fontFamily: "'DM Mono', monospace" }}>Log in</button>
+        <button style={{ padding: "8px 18px", borderRadius: 8, background: "transparent", border: "1px solid rgba(99,179,237,0.25)", color: "rgba(232,244,253,0.7)", fontSize: 13, cursor: "pointer", fontFamily: "'DM Mono', monospace" }}>Log in</button >
         <button style={{ padding: "8px 18px", borderRadius: 8, background: "linear-gradient(135deg, #4fc3f7, #7c4dff)", border: "none", color: "#fff", fontSize: 13, cursor: "pointer", fontFamily: "'Syne', sans-serif", fontWeight: 600 }}>Get started</button>
       </div>
     </nav>

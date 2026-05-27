@@ -29,6 +29,7 @@ import {
   setSidebarMobileOpen,
   selectSidebarCollapsed,
 } from "../redux/slices/uiSlice";
+import {useLogoutMutation} from '../redux/api/authApi'
 
 import {
   ROUTES,
@@ -38,10 +39,11 @@ import {
 
 import { COLORS } from "../theme";
 
-const TopNavbar = ({ pageTitle = "Dashboard" }) => {
+const TopNavbar = ({ pageTitle = "Dashboard",user }) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+  const [logout] = useLogoutMutation();
 
   const collapsed = useSelector(
     selectSidebarCollapsed
@@ -54,25 +56,29 @@ const TopNavbar = ({ pageTitle = "Dashboard" }) => {
     : SIDEBAR_WIDTH;
 
   // Temporary static user
-  const user = {
-    name: "Sajid Hussain",
-    email: "sajid@gmail.com",
-  };
+  // const user = {
+  //   name: "Sajid Hussain",
+  //   email: "sajid@gmail.com",
+  // };
 
-  const initials = user?.name
-    ? user.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
-    : "?";
+  const initials =
+  user?.firstName?.charAt(0).toUpperCase() || "?";
 
-  const handleLogout = () => {
-    setAnchorEl(null);
+  const handleLogout = async () => {
 
-    navigate(ROUTES.LOGIN);
-  };
+    try {
+
+        setAnchorEl(null);
+
+        await logout().unwrap();
+
+        navigate(ROUTES.LOGIN);
+
+    } catch (error) {
+
+        console.log(error);
+    }
+};
 
   return (
     <AppBar
@@ -231,8 +237,7 @@ const TopNavbar = ({ pageTitle = "Dashboard" }) => {
                 },
               }}
             >
-              {user?.name?.split(" ")[0] ||
-                "User"}
+              {user?.firstName || "User"}
             </Typography>
 
             <KeyboardArrowDownIcon
@@ -275,7 +280,7 @@ const TopNavbar = ({ pageTitle = "Dashboard" }) => {
               color: COLORS.textPrimary,
             }}
           >
-            {user?.name}
+            {user?.firstName || "User"}
           </Typography>
 
           <Typography variant="caption">

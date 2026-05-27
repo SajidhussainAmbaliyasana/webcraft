@@ -20,6 +20,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 //import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 //import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RocketLaunchOutlinedIcon from "@mui/icons-material/RocketLaunchOutlined";
+import { useGetStatsQuery } from "../redux/api/authApi";
 
 import { ROUTES } from "../constants";
 import { COLORS } from "../theme";
@@ -191,18 +192,27 @@ const ActivityItem = ({ label, time, icon, accent }) => (
 const DashboardD = () => {
   const navigate = useNavigate();
 
-  const user = { name: "Sajid Hussain" };
-  const websites = [];
+  // const user = { name: "Sajid Hussain" };
+  // const websites = [];
+  const { data, isLoading } = useGetStatsQuery();
 
-  const firstName = user?.name?.split(" ")[0] || "there";
+  const user = data?.data?.user;
+
+  const totalWebsites = data?.data?.totalWebsites || 0;
+
+  const totalPages = data?.data?.totalPages || 0;
+
+  const publishedCount = data?.data?.publishedWebsites || 0;
+
+  const firstName = user?.firstName || "John";
 
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
-  const totalPages = 0;
-  const totalViews = 0;
-  const publishedCount = 0;
+  // const totalPages = 0;
+   const totalViews = 0;
+  // const publishedCount = 0;
 
   const recentActivity = [
     {
@@ -228,6 +238,8 @@ const DashboardD = () => {
   return (
     <Box sx={{ width: "100%" }}>
       {/* ── Header ── */}
+
+      
       <Box
         sx={{
           display: "flex",
@@ -238,6 +250,7 @@ const DashboardD = () => {
           gap: 2,
         }}
       >
+        
         <Box>
           <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
             {greeting.toUpperCase()}
@@ -279,7 +292,7 @@ const DashboardD = () => {
         {[
           {
             label: "TOTAL WEBSITES",
-            value: websites.length,
+            value: totalWebsites,
             icon: <LanguageIcon sx={{ fontSize: 18 }} />,
             accent: COLORS.cyan,
           },

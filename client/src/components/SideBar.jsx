@@ -32,6 +32,8 @@ import {
   selectSidebarMobileOpen,
 } from "../redux/slices/uiSlice";
 
+import {useLogoutMutation} from '../redux/api/authApi'
+
 import {
   ROUTES,
   SIDEBAR_WIDTH,
@@ -109,14 +111,8 @@ const Logo = ({ collapsed }) => (
 );
 
 const UserCard = ({ user, collapsed }) => {
-  const initials = user?.name
-    ? user.name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2)
-    : "?";
+  
+  const initials = user?.firstName?.charAt(0).toUpperCase() || "?";
 
   return (
     <Box
@@ -155,7 +151,7 @@ const UserCard = ({ user, collapsed }) => {
               textOverflow: "ellipsis",
             }}
           >
-            {user?.name || "User"}
+            {user?.firstName || "User"}
           </Typography>
 
           <Typography
@@ -175,19 +171,30 @@ const UserCard = ({ user, collapsed }) => {
   );
 };
 
-const SidebarContent = ({ collapsed }) => {
+const SidebarContent = ({ collapsed,user }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [logout] = useLogoutMutation();
 
   const handleNav = (path) => {
     navigate(path);
     dispatch(setSidebarMobileOpen(false));
   };
 
-  const handleLogout = () => {
-    navigate(ROUTES.LOGIN);
-  };
+  const handleLogout = async () => {
+
+    try {
+
+        await logout().unwrap();
+
+        navigate(ROUTES.LOGIN);
+
+    } catch (error) {
+
+        console.log(error);
+    }
+};
 
   return (
     <Box
@@ -268,10 +275,7 @@ const SidebarContent = ({ collapsed }) => {
         <Divider sx={{ mb: 1 }} />
 
         <UserCard
-          user={{
-            name: "Sajid Hussain",
-            email: "sajid@gmail.com",
-          }}
+          user={user}
           collapsed={collapsed}
         />
 
@@ -340,7 +344,7 @@ const SidebarContent = ({ collapsed }) => {
   );
 };
 
-const SideBar = () => {
+const SideBar = ({user}) => {
   const dispatch = useDispatch();
 
   const collapsed = useSelector(
@@ -414,18 +418,10 @@ const SideBar = () => {
           },
         }}
       >
-        <SidebarContent collapsed={false} />
+        <SidebarContent collapsed={collapsed} user={user}/>
       </Drawer>
 
-      {/* <Box
-        sx={{
-          position: "relative",
-          display: {
-            xs: "none",
-            md: "block",
-          },
-        }}
-      > */}
+      
       <Box
         sx={{
           position: "sticky",
@@ -455,7 +451,7 @@ const SideBar = () => {
             },
           }}
         >
-          <SidebarContent collapsed={collapsed} />
+          <SidebarContent collapsed={collapsed} user={user}/>
         </Drawer>
       </Box>
     </>

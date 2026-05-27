@@ -7,9 +7,12 @@ import TopNavbar from "../components/TopNavbar";
 
 import { selectSidebarCollapsed } from "../redux/slices/uiSlice";
 import { COLORS } from "../theme";
+import {useMeQuery} from '../redux/api/authApi';
 
 const DashboardLayout = () => {
   const collapsed = useSelector(selectSidebarCollapsed);
+  const {data,isLoading} = useMeQuery();
+  const user = data?.data;
 
   return (
     <Box
@@ -19,7 +22,7 @@ const DashboardLayout = () => {
         background: COLORS.bg,
       }}
     >
-      <Sidebar />
+      <Sidebar user={user}/>
 
       <Box
         component="main"
@@ -31,7 +34,7 @@ const DashboardLayout = () => {
           width: 0,
         }}
       >
-        <TopNavbar pageTitle="Dashboard" />
+        <TopNavbar pageTitle="Dashboard" user={user}/>
 
         <Toolbar sx={{ minHeight: "60px !important" }} />
 
