@@ -8,13 +8,8 @@ import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import LanguageIcon from "@mui/icons-material/Language";
 
-// import {
-//   useGetWebsitesQuery,
-//   useCreateWebsiteMutation,
-//   useUpdateWebsiteMutation,
-//   useDeleteWebsiteMutation,
-//   usePublishWebsiteMutation,
-// } from "../redux/api/websiteApi";
+
+import { useGetWebsitesQuery, useCreateWebsiteMutation, useUpdateWebsiteMutation, useDeleteWebsiteMutation, usePublishWebsiteMutation } from "../redux/api/websiteApi";
 
 import WebsiteCard from "../components/WebsiteCard";
 import WebsiteFormDialog from "../components/WebsiteFormDialog";
@@ -49,46 +44,21 @@ const Website = () => {
   const notify = useSnackbar();
 
   // RTK Query hooks
-  // const { data: websites = [], isLoading }          = useGetWebsitesQuery();
-  // const [createWebsite, { isLoading: creating }]    = useCreateWebsiteMutation();
-  // const [updateWebsite, { isLoading: updating }]    = useUpdateWebsiteMutation();
-  // const [deleteWebsite, { isLoading: deleting }]    = useDeleteWebsiteMutation();
-  // const [publishWebsite, { isLoading: publishing }] = usePublishWebsiteMutation();
+  const { data, isLoading } = useGetWebsitesQuery();
+  const [createWebsite, { isLoading: creating }] = useCreateWebsiteMutation();
+  const [updateWebsite, { isLoading: updating }] = useUpdateWebsiteMutation();
+  const [deleteWebsite, { isLoading: deleting }] = useDeleteWebsiteMutation();
+  const [publishWebsite, { isLoading: publishing }] = usePublishWebsiteMutation();
 
-  //this is temperory 
-  // Dummy local state
-  const [websites, setWebsites] = useState([
-    {
-      _id: "1",
-      name: "Portfolio Website",
-      subdomain: "portfolio",
-      description: "Personal portfolio website",
-      pageCount: 4,
-      isPublished: true,
-    },
-    {
-      _id: "2",
-      name: "Agency Site",
-      subdomain: "agency",
-      description: "Digital agency landing page",
-      pageCount: 7,
-      isPublished: false,
-    },
-    {
-      _id: "3",
-      name: "Restaurant",
-      subdomain: "restaurant",
-      description: "Restaurant ordering website",
-      pageCount: 5,
-      isPublished: true,
-    },
-  ]);
+  const websites = (data?.websites || []).map((website) => ({
+    ...website,
+    subdomain: website.slug,
+    isPublished: website.visibility === "public",
+  }));
 
-  const isLoading = false;
-  const creating = false;
-  const updating = false;
-  const deleting = false;
-  const publishing = false;
+  //const updating = false;
+  //const deleting = false;
+  //const publishing = false;
 
   // Dialog / modal state
   const [createOpen, setCreateOpen] = useState(false);
@@ -100,70 +70,105 @@ const Website = () => {
   // ── Handlers ──────────────────────────────────────
   const handleCreate = async (form) => {
     try {
-      //await createWebsite(form).unwrap();
-      setWebsites((prev) => [
-        ...prev,
-        {
-          _id: Date.now().toString(),
-          ...form,
-          pageCount: 0,
-          isPublished: false,
-        },
-      ]);
-      notify.success("Website created successfully!");
+      const payload = {
+        name: form.name,
+        slug: form.subdomain,
+        description: form.description,
+      };
+
+      const response = await createWebsite(payload).unwrap();
+
+      notify.success(response.message);
       setCreateOpen(false);
     } catch (err) {
-      notify.error(err?.data?.message || "Failed to create website.");
+      notify.error(
+        err?.data?.message || "Failed to create website."
+      );
     }
   };
 
   const handleUpdate = async (form) => {
     try {
-      //await updateWebsite({ id: editWebsite._id, ...form }).unwrap();
-      setWebsites((prev) =>
-        prev.map((w) =>
-          w._id === editWebsite._id
-            ? { ...w, ...form }
-            : w
-        )
-      );
-      notify.success("Website updated.");
+      const payload = {
+        id: editWebsite._id,
+        name: form.name,
+        slug: form.subdomain,
+        description: form.description,
+      };
+
+      const response = await updateWebsite(payload).unwrap();
+
+      notify.success(response.message);
       setEditWebsite(null);
     } catch (err) {
-      notify.error(err?.data?.message || "Failed to update website.");
+      notify.error(
+        err?.data?.message || "Failed to update website."
+      );
     }
   };
 
   const handleDelete = async () => {
     try {
-      //await deleteWebsite(deleteTarget._id).unwrap();
-      setWebsites((prev) =>
-        prev.filter((w) => w._id !== deleteTarget._id)
-      );
-      notify.success("Website deleted.");
+      const response = await deleteWebsite(
+        deleteTarget._id
+      ).unwrap();
+
+      notify.success(response.message);
       setDeleteTarget(null);
     } catch (err) {
-      notify.error(err?.data?.message || "Failed to delete website.");
+      notify.error(
+        err?.data?.message || "Failed to delete website."
+      );
     }
   };
 
   const handlePublish = async () => {
-    const isPublished = publishTarget?.isPublished || publishTarget?.status === "published";
     try {
-      //await publishWebsite(publishTarget._id).unwrap();
-      setWebsites((prev) =>
-        prev.map((w) =>
-          w._id === publishTarget._id
-            ? { ...w, isPublished: !w.isPublished }
-            : w
-        )
-      );
-      notify.success(isPublished ? "Website unpublished." : "Website is now live! 🚀");
+      const response = await publishWebsite(
+        publishTarget._id
+      ).unwrap();
+
+      notify.success(response.message);
       setPublishTarget(null);
     } catch (err) {
-      notify.error(err?.data?.message || "Publish failed.");
+      notify.error(
+        err?.data?.message || "Failed to update visibility."
+      );
     }
   };
+
+
+
+  // const handleDelete = async () => {
+  //   try {
+  //     //await deleteWebsite(deleteTarget._id).unwrap();
+  //     setWebsites((prev) =>
+  //       prev.filter((w) => w._id !== deleteTarget._id)
+  //     );
+  //     notify.success("Website deleted.");
+  //     setDeleteTarget(null);
+  //   } catch (err) {
+  //     notify.error(err?.data?.message || "Failed to delete website.");
+  //   }
+  // };
+
+  // const handlePublish = async () => {
+  //   const isPublished = publishTarget?.isPublished || publishTarget?.status === "published";
+  //   try {
+  //     //await publishWebsite(publishTarget._id).unwrap();
+  //     setWebsites((prev) =>
+  //       prev.map((w) =>
+  //         w._id === publishTarget._id
+  //           ? { ...w, isPublished: !w.isPublished }
+  //           : w
+  //       )
+  //     );
+  //     notify.success(isPublished ? "Website unpublished." : "Website is now live! 🚀");
+  //     setPublishTarget(null);
+  //   } catch (err) {
+  //     notify.error(err?.data?.message || "Publish failed.");
+  //   }
+  // };
 
   // Filter by search term
   const filtered = websites.filter(

@@ -1,4 +1,5 @@
 import Website from "../../models/website.js";
+import Page from "../../models/page.js";
 
 export const createWebsite = async (req, res) => {
     try {
@@ -33,6 +34,21 @@ export const createWebsite = async (req, res) => {
             ownerId: req.user.userId
         });
 
+        // Create default home page
+        const homePage = await Page.create({
+            websiteId: website._id,
+            name: "Home",
+            title: "Home",
+            slug: "",
+            description: "",
+            isHomePage: true,
+            status: "draft"
+        });
+
+        // Link homepage to website
+        website.homepageId = homePage._id;
+        await website.save();
+
         return res.status(201).json({
             success: true,
             message: "Website created successfully",
@@ -42,7 +58,7 @@ export const createWebsite = async (req, res) => {
                 slug: website.slug,
                 description: website.description,
                 logo: website.logo,
-                homePageId: website.homePageId,
+                homePageId: website.homepageId,
                 status: website.status,
                 visibility: website.visibility,
                 createdAt: website.createdAt

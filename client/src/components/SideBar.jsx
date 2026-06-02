@@ -32,7 +32,8 @@ import {
   selectSidebarMobileOpen,
 } from "../redux/slices/uiSlice";
 
-import {useLogoutMutation} from '../redux/api/authApi'
+import { useLogoutMutation } from '../redux/api/authApi'
+import { baseApi } from "../redux/api/baseApi";
 
 import {
   ROUTES,
@@ -111,7 +112,7 @@ const Logo = ({ collapsed }) => (
 );
 
 const UserCard = ({ user, collapsed }) => {
-  
+
   const initials = user?.firstName?.charAt(0).toUpperCase() || "?";
 
   return (
@@ -171,7 +172,7 @@ const UserCard = ({ user, collapsed }) => {
   );
 };
 
-const SidebarContent = ({ collapsed,user }) => {
+const SidebarContent = ({ collapsed, user }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -181,20 +182,18 @@ const SidebarContent = ({ collapsed,user }) => {
     navigate(path);
     dispatch(setSidebarMobileOpen(false));
   };
-
   const handleLogout = async () => {
-
     try {
+      await logout().unwrap();
 
-        await logout().unwrap();
+      dispatch(baseApi.util.resetApiState());
 
-        navigate(ROUTES.LOGIN);
+      navigate(ROUTES.LOGIN, { replace: true });
 
     } catch (error) {
-
-        console.log(error);
+      console.log(error);
     }
-};
+  };
 
   return (
     <Box
@@ -344,7 +343,7 @@ const SidebarContent = ({ collapsed,user }) => {
   );
 };
 
-const SideBar = ({user}) => {
+const SideBar = ({ user }) => {
   const dispatch = useDispatch();
 
   const collapsed = useSelector(
@@ -418,10 +417,10 @@ const SideBar = ({user}) => {
           },
         }}
       >
-        <SidebarContent collapsed={collapsed} user={user}/>
+        <SidebarContent collapsed={collapsed} user={user} />
       </Drawer>
 
-      
+
       <Box
         sx={{
           position: "sticky",
@@ -451,7 +450,7 @@ const SideBar = ({user}) => {
             },
           }}
         >
-          <SidebarContent collapsed={collapsed} user={user}/>
+          <SidebarContent collapsed={collapsed} user={user} />
         </Drawer>
       </Box>
     </>

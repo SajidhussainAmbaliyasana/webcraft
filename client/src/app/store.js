@@ -1,16 +1,19 @@
-import {configureStore} from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 
-import {baseApi} from '../redux/api/baseApi';
+import { baseApi } from "../redux/api/baseApi";
 
-import uiReducer from '../redux/slices/uiSlice';
+import "../redux/api/authApi";
+import "../redux/api/websiteApi";
+import "../redux/api/pageApi";
+import "../redux/api/componentApi";
 
+import uiReducer from "../redux/slices/uiSlice";
 
 export const store = configureStore({
-    reducer:{
-        ui:uiReducer,
-        [baseApi.reducerPath]:baseApi.reducer
+    reducer: {
+        ui: uiReducer,
+        [baseApi.reducerPath]: baseApi.reducer,
     },
-    middleware:(getDefaultMiddleware) =>
+    middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(baseApi.middleware),
-    
 });

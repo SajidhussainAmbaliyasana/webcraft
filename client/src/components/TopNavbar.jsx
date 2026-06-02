@@ -24,12 +24,13 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 import { useDispatch, useSelector } from "react-redux";
+import { baseApi } from "../redux/api/baseApi";
 
 import {
   setSidebarMobileOpen,
   selectSidebarCollapsed,
 } from "../redux/slices/uiSlice";
-import {useLogoutMutation} from '../redux/api/authApi'
+import { useLogoutMutation } from '../redux/api/authApi'
 
 import {
   ROUTES,
@@ -39,7 +40,7 @@ import {
 
 import { COLORS } from "../theme";
 
-const TopNavbar = ({ pageTitle = "Dashboard",user }) => {
+const TopNavbar = ({ pageTitle = "Dashboard", user }) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -62,23 +63,20 @@ const TopNavbar = ({ pageTitle = "Dashboard",user }) => {
   // };
 
   const initials =
-  user?.firstName?.charAt(0).toUpperCase() || "?";
+    user?.firstName?.charAt(0).toUpperCase() || "?";
 
   const handleLogout = async () => {
-
     try {
+      await logout().unwrap();
 
-        setAnchorEl(null);
+      dispatch(baseApi.util.resetApiState());
 
-        await logout().unwrap();
-
-        navigate(ROUTES.LOGIN);
+      navigate(ROUTES.LOGIN, { replace: true });
 
     } catch (error) {
-
-        console.log(error);
+      console.log(error);
     }
-};
+  };
 
   return (
     <AppBar

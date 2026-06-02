@@ -89,7 +89,7 @@ function Orb({ x, y, color, size = 600 }) {
   );
 }
 
-function Nav() {
+function Nav({navigate}) {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 30);
@@ -125,8 +125,8 @@ function Nav() {
         ))}
       </div>
       <div style={{ display: "flex", gap: 12 }}>
-        <button style={{ padding: "8px 18px", borderRadius: 8, background: "transparent", border: "1px solid rgba(99,179,237,0.25)", color: "rgba(232,244,253,0.7)", fontSize: 13, cursor: "pointer", fontFamily: "'DM Mono', monospace" }}>Log in</button >
-        <button style={{ padding: "8px 18px", borderRadius: 8, background: "linear-gradient(135deg, #4fc3f7, #7c4dff)", border: "none", color: "#fff", fontSize: 13, cursor: "pointer", fontFamily: "'Syne', sans-serif", fontWeight: 600 }}>Get started</button>
+        <button style={{ padding: "8px 18px", borderRadius: 8, background: "transparent", border: "1px solid rgba(99,179,237,0.25)", color: "rgba(232,244,253,0.7)", fontSize: 13, cursor: "pointer", fontFamily: "'DM Mono', monospace" }} onClick={() => navigate("/login")}>Log in</button >
+        <button style={{ padding: "8px 18px", borderRadius: 8, background: "linear-gradient(135deg, #4fc3f7, #7c4dff)", border: "none", color: "#fff", fontSize: 13, cursor: "pointer", fontFamily: "'Syne', sans-serif", fontWeight: 600 }} onClick={()=> navigate("/signup")}>Get started</button>
       </div>
     </nav>
   );
@@ -296,12 +296,14 @@ function Tag({ children }) {
 export default function LandingPage() {
   const [hovered, setHovered] = useState(null);
 
+  const navigate = useNavigate();
+
   return (
     <div style={{ background: "#060812", minHeight: "100vh", color: "#e8f4fd", fontFamily: "'DM Sans', sans-serif", overflowX: "hidden" }}>
       <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
       <Noise />
       <GridLines />
-      <Nav />
+      <Nav navigate={navigate}/>
 
       {/* HERO */}
       <section style={{ position: "relative", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "120px 5% 80px" }}>
@@ -343,6 +345,7 @@ export default function LandingPage() {
             }}
               onMouseEnter={e => { e.target.style.transform = "translateY(-2px)"; e.target.style.boxShadow = "0 4px 60px rgba(79,195,247,0.45)"; }}
               onMouseLeave={e => { e.target.style.transform = ""; e.target.style.boxShadow = "0 0 40px rgba(79,195,247,0.3)"; }}
+              onClick={()=> navigate("/login")}
             >Start building free →</button>
             <button style={{
               padding: "14px 32px", borderRadius: 10,
@@ -486,7 +489,9 @@ export default function LandingPage() {
                   color: p.accent ? "#fff" : "rgba(232,244,253,0.6)",
                   fontFamily: "'Syne', sans-serif", fontWeight: 600, fontSize: 14,
                   cursor: "pointer",
-                }}>Get started</button>
+                }}
+                onClick={()=>navigate("/signup")}
+                >Get started</button>
               </div>
             ))}
           </div>
@@ -513,7 +518,9 @@ export default function LandingPage() {
             fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 16,
             cursor: "pointer", letterSpacing: "-0.3px",
             boxShadow: "0 0 60px rgba(124,77,255,0.4)",
-          }}>Build your first website →</button>
+          }}
+          onClick={()=>navigate("/signup")}
+          >Build your first website →</button>
         </div>
       </Section>
 

@@ -88,10 +88,15 @@ const websiteSchema = new mongoose.Schema({
 
 
 websiteSchema.index({ ownerId: 1, isDeleted: 1 });
-// websiteSchema.index({ slug: 1, isDeleted: 1 });
+
 websiteSchema.index(
-    { slug: 1, isDeleted: 1 },
-    { unique: true }
+    { slug: 1 },
+    {
+        unique: true,
+        partialFilterExpression: {
+            isDeleted: false
+        }
+    }
 );
 
 const Website = mongoose.model("Website", websiteSchema);

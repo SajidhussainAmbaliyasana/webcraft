@@ -23,7 +23,7 @@ import { useLoginMutation } from "../redux/api/authApi";
 import { useNavigate } from 'react-router-dom';
 
 const LoginBox = () => {
-    const [form, setForm] = useState({ username: "", password: "", rememberMe: false });
+    const [form, setForm] = useState({ username: "sajid", password: "Sajid@1234", rememberMe: false });
     const [showPass, setShowPass] = useState(false);
     const [apiError, setApiError] = useState("");
     const navigate = useNavigate();
