@@ -24,12 +24,16 @@ router.post('/:id',auth,getWebsite);
 
 router.delete('/:id',auth,deleteWebsite);
 
-router.get("/slug/:slug",getPublicWebsite);
 
 router.patch("/:id/visibility",auth,toggleWebsiteVisibility);
 
 router.put("/:id",auth,updateWebsite);
- 
+
 router.get("/:websiteId/pages", auth, getWebsitePages);
+
+router.get("/public/:subdomain", getPublicWebsite);
+
+router.get("/public/:subdomain/:pageSlug", getPublicWebsite);
+
 
 export default router;

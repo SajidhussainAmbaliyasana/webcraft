@@ -6,10 +6,12 @@ const LoginPage = lazy(() => import('../pages/LoginPage'));
 const SignupPage = lazy(() => import('../pages/Signup'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
 const Website = lazy(() => import('../pages/Website'));
-const Setting = lazy(() => import('../pages/Setting'));
+// const Setting = lazy(() => import('../pages/Setting'));
 const DashboardLayout = lazy(() => import('../layouts/DashboardLayout'));
 const PagesPage = lazy(() => import('../pages/PagesPage'));
 const EditorPage = lazy(() => import('../pages/EditorPage'));
+const SettingsPageShell = lazy(() => import("../pages/SettingPageShell"));
+const SiteRenderer = lazy(() => import('../pages/SiteRenderer'));
 import ProtectedRoutes from './ProtectedRoutes';
 import PublicRoutes from './PublicRoutes';
 
@@ -39,7 +41,7 @@ const AppRoutes = () => {
               <Route path='websites/:websiteId/pages' element={<PagesPage />} />
 
               <Route path='websites/:websiteId/pages/:pageId/editor' element={<EditorPage />} />
-              <Route path='settings' element={<Setting />} />
+              <Route path='settings' element={<SettingsPageShell />} />
 
 
             </Route>
@@ -47,6 +49,10 @@ const AppRoutes = () => {
 
           <Route path='/e' element={<Epage />} />
           <Route path='/extra' element={<ExtraPage />} />
+
+          <Route path='/:subdomain' element={<SiteRenderer />} />
+
+          <Route path='/:subdomain/:pageSlug' element={<SiteRenderer />} />
 
 
         </Routes>

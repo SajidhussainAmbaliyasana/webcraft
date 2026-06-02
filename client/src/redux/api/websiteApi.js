@@ -67,6 +67,20 @@ export const websiteApi = baseApi.injectEndpoints({
             ],
         }),
 
+        getPublicSite: builder.query({
+            query: (subdomain) => ({
+                url: `/website/public/${subdomain}`,
+                method: "GET",
+            }),
+        }),
+
+        getPublicPage: builder.query({
+            query: ({ subdomain, pageSlug }) => ({
+                url: `/website/public/${subdomain}/${pageSlug}`,
+                method: "GET",
+            }),
+        }),
+
     }),
     overrideExisting: false,
 });
@@ -78,4 +92,6 @@ export const {
     useUpdateWebsiteMutation,
     useDeleteWebsiteMutation,
     usePublishWebsiteMutation,
+    useGetPublicPageQuery,
+    useGetPublicSiteQuery
 } = websiteApi;
