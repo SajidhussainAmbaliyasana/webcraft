@@ -36,9 +36,12 @@ const createPage = async (req, res) => {
         }
 
         if (!isHomePage) {
+            const normalizedSlug =
+                slug.replace(/^\/+/, "").toLowerCase();
+
             const existingSlug = await Page.findOne({
                 websiteId,
-                slug: slug.toLowerCase(),
+                slug: normalizedSlug,
                 isDeleted: false
             });
 
@@ -68,7 +71,9 @@ const createPage = async (req, res) => {
         const page = await Page.create({
             websiteId,
             name,
-            slug: isHomePage ? "" : slug.toLowerCase(),
+            slug: isHomePage
+                ? ""
+                : slug.replace(/^\/+/, "").toLowerCase(),
             title,
             description: description || null,
             isHomePage,

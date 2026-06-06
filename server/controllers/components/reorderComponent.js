@@ -13,7 +13,7 @@ const reorderComponents = async (req, res) => {
 
         //console.log("Step 1");
         for (let i = 0; i < order.length; i++) {
-            console.log("Temp", order[i], i + 1000);
+            //console.log("Temp", order[i], i + 1000);
 
             await Component.findByIdAndUpdate(
                 order[i],
@@ -25,7 +25,7 @@ const reorderComponents = async (req, res) => {
 
         //console.log("Step 2");
         for (let i = 0; i < order.length; i++) {
-            console.log("Final", order[i], i + 1);
+            //console.log("Final", order[i], i + 1);
 
             await Component.findByIdAndUpdate(
                 order[i],

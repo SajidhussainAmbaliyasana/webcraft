@@ -43,28 +43,7 @@ const SiteNotFound = ({ subdomain }) => (
 );
 
 // Page Not Found
-// const PageNotFound = ({ subdomain, pageSlug }) => (
-//     <Box
-//         sx={{
-//             minHeight: "100vh",
-//             display: "flex",
-//             alignItems: "center",
-//             justifyContent: "center",
-//             flexDirection: "column",
-//             gap: 2
-//         }}
-//     >
-//         <Typography variant="h2">404</Typography>
 
-//         <Typography>
-//             Page "{pageSlug}" not found
-//         </Typography>
-
-//         <Typography>
-//             Website: {subdomain}
-//         </Typography>
-//     </Box>
-// );
 
 const PageNotFound = ({ subdomain, slug, theme = {} }) => (
     <Box sx={{
@@ -107,7 +86,10 @@ const SiteRenderer = () => {
             skip: !pageSlug,
         }
     );
-
+    console.log({
+        subdomain,
+        pageSlug,
+    });
     const data = pageSlug
         ? pageQuery.data
         : homeQuery.data;
@@ -119,6 +101,9 @@ const SiteRenderer = () => {
     const isError = pageSlug
         ? pageQuery.isError
         : homeQuery.isError;
+
+    console.log("PAGE DATA", pageQuery.data);
+    console.log("PAGE ERROR", pageQuery.error);
 
     if (isLoading) {
         return <FullPageLoader />;
