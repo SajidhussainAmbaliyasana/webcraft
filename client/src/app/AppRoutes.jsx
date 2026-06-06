@@ -12,6 +12,9 @@ const PagesPage = lazy(() => import('../pages/PagesPage'));
 const EditorPage = lazy(() => import('../pages/EditorPage'));
 const SettingsPageShell = lazy(() => import("../pages/SettingPageShell"));
 const SiteRenderer = lazy(() => import('../pages/SiteRenderer'));
+const PaymentSuccess = lazy(
+  () => import("../pages/PaymentSuccess")
+);
 import ProtectedRoutes from './ProtectedRoutes';
 import PublicRoutes from './PublicRoutes';
 
@@ -42,6 +45,10 @@ const AppRoutes = () => {
 
               <Route path='websites/:websiteId/pages/:pageId/editor' element={<EditorPage />} />
               <Route path='settings' element={<SettingsPageShell />} />
+              <Route
+                path='payment-success'
+                element={<PaymentSuccess />}
+              />
 
 
             </Route>

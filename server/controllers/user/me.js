@@ -6,7 +6,7 @@ const me = async(req,res)=>{
         const user = await User.findOne({
             _id:req.user.userId,
             isDeleted:false
-        }).select("_id firstName lastName username email phone role status subscription profileImage");
+        }).select("_id firstName lastName username email phone lastLoginAt subscription profileImage");
 
         if(!user){
             return res.status(404).json({message:"User not found",success:false});

@@ -14,6 +14,7 @@ import user from './routes/user.js';
 import website from './routes/website.js';
 import page from './routes/page.js';
 import component from './routes/component.js';
+import payment from './routes/payment.js'
 
 
 app.use(
@@ -37,6 +38,7 @@ app.use('/api/user',user);
 app.use('/api/website',website);
 app.use('/api/pages',page);
 app.use('/api/pages',component);
+app.use('/api/payment',payment)
 
 
 app.listen(port,()=>{

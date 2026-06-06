@@ -21,6 +21,7 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import LogoutIcon from "@mui/icons-material/Logout";
 //import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -295,16 +296,16 @@ const TopNavbar = ({ pageTitle = "Dashboard", user }) => {
             navigate("/dashboard/settings");
           }}
         >
-          {/* <PersonOutlineIcon
+          <AccountCircleOutlinedIcon
             sx={{
               fontSize: 16,
               mr: 1.5,
             }}
-          /> */}
+          />
           Profile
         </MenuItem>
 
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             setAnchorEl(null);
 
@@ -318,7 +319,7 @@ const TopNavbar = ({ pageTitle = "Dashboard", user }) => {
             }}
           />
           Settings
-        </MenuItem>
+        </MenuItem> */}
 
         <Divider />
 

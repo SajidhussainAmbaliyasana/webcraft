@@ -15,6 +15,9 @@ import refreshToken from '../controllers/user/refershToken.js';
 import getAllUsers from '../controllers/user/alluser.js';
 import getSingleUser from '../controllers/user/getSingleUser.js';
 import stats from '../controllers/user/stats.js';
+import updateProfile from '../controllers/user/updateProfile.js';
+import updatePassword from '../controllers/user/updatePassword.js';
+import deleteAccount from '../controllers/user/deleteAccount.js';
 
 
 router.post('/register',register);
@@ -32,6 +35,12 @@ router.post("/refresh-token",refreshToken);
 router.post('/users',auth,isSuperAdmin,getAllUsers);
 
 router.post('/user/:id',auth,isSuperAdmin,getSingleUser);
+
+router.patch("/update",auth,updateProfile);
+
+router.patch("/password",auth,updatePassword);
+
+router.delete("/remove",auth,deleteAccount);
 
 
 export default router;

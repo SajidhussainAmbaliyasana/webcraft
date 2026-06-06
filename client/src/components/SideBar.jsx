@@ -55,12 +55,7 @@ const NAV_ITEMS = [
     path: ROUTES.WEBSITES,
   },
   {
-    label: "Editor",
-    icon: <EditNoteIcon fontSize="small" />,
-    path: "/dashboard/editor",
-  },
-  {
-    label: "Settings",
+    label: "Profile",
     icon: <SettingsOutlinedIcon fontSize="small" />,
     path: ROUTES.SETTINGS,
   },
