@@ -48,9 +48,16 @@ const verifyPayment = async (req, res) => {
             });
         }
 
+        const startedAt = new Date();
+
+        const expiresAt = new Date(startedAt);
+        expiresAt.setMonth(
+            expiresAt.getMonth() + 1
+        );
+
         user.subscription.plan = plan;
-        user.subscription.startedAt = new Date();
-        user.subscription.expiresAt = null;
+        user.subscription.startedAt = startedAt;
+        user.subscription.expiresAt = expiresAt;
 
         await user.save();
 

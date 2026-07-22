@@ -19,14 +19,13 @@ import ProtectedRoutes from './ProtectedRoutes';
 import PublicRoutes from './PublicRoutes';
 
 import LandingPage from '../pages/LandingPage'
-import ExtraPage from '../pages/ExtraPage';
-import Epage from '../pages/Epage';
+import PageLoader from '../components/PageLoader'
 
 const AppRoutes = () => {
   return (
 
     <BrowserRouter>
-      <Suspense fallback={<h1>Loading...</h1>}>
+      <Suspense fallback={<PageLoader/>}>
 
         <Routes>
           <Route element={<PublicRoutes />}>
@@ -54,9 +53,7 @@ const AppRoutes = () => {
             </Route>
           </Route>
 
-          <Route path='/e' element={<Epage />} />
-          <Route path='/extra' element={<ExtraPage />} />
-
+         
           <Route path='/:subdomain' element={<SiteRenderer />} />
 
           <Route path='/:subdomain/:pageSlug' element={<SiteRenderer />} />

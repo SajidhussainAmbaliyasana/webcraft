@@ -8,6 +8,7 @@ import {
   Card,
   CardContent,
   Chip,
+  LinearProgress,
   alpha,
 } from "@mui/material";
 
@@ -20,10 +21,15 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 //import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 //import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RocketLaunchOutlinedIcon from "@mui/icons-material/RocketLaunchOutlined";
+import WorkspacePremiumOutlinedIcon from "@mui/icons-material/WorkspacePremiumOutlined";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import AutorenewOutlinedIcon from "@mui/icons-material/AutorenewOutlined";
+import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import { useGetStatsQuery } from "../redux/api/authApi";
-
+import { useMeQuery } from "../redux/api/authApi";
 import { ROUTES } from "../constants";
 import { COLORS } from "../theme";
+import { SUBSCRIPTION_PLANS } from "../constants";
 
 /* ── Stat Card ─────────────────────────────────────── */
 const StatCard = ({ label, value, icon, accent }) => (
@@ -210,36 +216,74 @@ const DashboardD = () => {
   const greeting =
     hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
-  // const totalPages = 0;
-   const totalViews = 0;
-  // const publishedCount = 0;
 
-  const recentActivity = [
-    {
-      label: "Portfolio site published",
-      time: "2 min ago",
-      //icon: <CheckCircleOutlineIcon sx={{ fontSize: 16 }} />,
-      accent: COLORS.green,
-    },
-    {
-      label: "Hero section updated",
-      time: "18 min ago",
-      icon: <EditNoteIcon sx={{ fontSize: 16 }} />,
-      accent: COLORS.purple,
-    },
-    {
-      label: "New page created",
-      time: "1 hr ago",
-      //icon: <AddCircleOutlineIcon sx={{ fontSize: 16 }} />,
-      accent: COLORS.cyan,
-    },
-  ];
+  const { data: userData } = useMeQuery();
+  const subscriptionData = userData?.data?.subscription;
+
+const startedAt = subscriptionData?.startedAt
+  ? new Date(subscriptionData.startedAt)
+  : null;
+
+const expiresAt = subscriptionData?.expiresAt
+  ? new Date(subscriptionData.expiresAt)
+  : null;
+
+const daysLeft = expiresAt
+  ? Math.max(
+      0,
+      Math.ceil(
+        (expiresAt - new Date()) /
+          (1000 * 60 * 60 * 24)
+      )
+    )
+  : 0;
+
+const renewalDate = expiresAt
+  ? expiresAt.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })
+  : "No expiry";
+
+let periodPercent = 0;
+
+if (startedAt && expiresAt) {
+  const totalDays =
+    (expiresAt - startedAt) /
+    (1000 * 60 * 60 * 24);
+
+  const usedDays =
+    totalDays - daysLeft;
+
+  periodPercent = Math.min(
+    100,
+    Math.max(
+      0,
+      Math.round(
+        (usedDays / totalDays) * 100
+      )
+    )
+  );
+}
+ const plan = userData?.data?.subscription?.plan || "free";
+
+  const websiteCount =
+    userData?.data?.websiteCount || 0;
+ const subscription =
+  SUBSCRIPTION_PLANS[plan] ||
+  SUBSCRIPTION_PLANS.free;
+
+  
+
+  console.log("plan =", plan);
+  console.log("subscription =", subscription);
 
   return (
     <Box sx={{ width: "100%" }}>
       {/* ── Header ── */}
 
-      
+
       <Box
         sx={{
           display: "flex",
@@ -250,7 +294,7 @@ const DashboardD = () => {
           gap: 2,
         }}
       >
-        
+
         <Box>
           <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
             {greeting.toUpperCase()}
@@ -303,12 +347,6 @@ const DashboardD = () => {
             accent: COLORS.purple,
           },
           {
-            label: "TOTAL VIEWS",
-            value: totalViews,
-            icon: <VisibilityOutlinedIcon sx={{ fontSize: 18 }} />,
-            accent: COLORS.pink,
-          },
-          {
             label: "PUBLISHED",
             value: publishedCount,
             icon: <TrendingUpIcon sx={{ fontSize: 18 }} />,
@@ -327,90 +365,8 @@ const DashboardD = () => {
         ))}
       </Box>
 
-      {/* ── Quick Actions + Recent Activity ── */}
-      {/* <Grid container spacing={2.5} sx={{ width: "100%", mx: 0,border:"10px solid red",boxSizing:"border-box" }}>
-        <Grid item xs={12} md={7}>
-          <Card sx={{ height: "100%" }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography variant="h6" sx={{ mb: 0.5, fontSize: "1rem" }}>
-                Quick Actions
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  mb: 2.5,
-                  fontSize: "0.72rem",
-                  letterSpacing: "0.8px",
-                  textTransform: "uppercase",
-                }}
-              >
-                Jump right into building
-              </Typography>
+      {/* ── Quick Actions + Subscription ── */}
 
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
-                <QuickAction
-                  label="Create a new website"
-                  description="Start from scratch or use a template"
-                  icon={<AddIcon sx={{ fontSize: 18 }} />}
-                  accent={COLORS.cyan}
-                  onClick={() => navigate(ROUTES.WEBSITES)}
-                />
-                <QuickAction
-                  label="Manage websites"
-                  description="View, edit and publish your websites"
-                  icon={<LanguageIcon sx={{ fontSize: 18 }} />}
-                  accent={COLORS.purple}
-                  onClick={() => navigate(ROUTES.WEBSITES)}
-                />
-                <QuickAction
-                  label="Open editor"
-                  description="Visual component-based editor"
-                  icon={<EditNoteIcon sx={{ fontSize: 18 }} />}
-                  onClick={() => navigate(ROUTES.WEBSITES)}
-                />
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={5}>
-          <Card sx={{ height: "100%" }}>
-            <CardContent sx={{ p: 3 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  mb: 0.5,
-                }}
-              >
-                <Typography variant="h6" sx={{ fontSize: "1rem" }}>
-                  Recent Activity
-                </Typography>
-                <Chip label="Today" size="small" color="primary" />
-              </Box>
-
-              <Typography
-                variant="body2"
-                sx={{
-                  mb: 2.5,
-                  fontSize: "0.72rem",
-                  letterSpacing: "0.8px",
-                  textTransform: "uppercase",
-                }}
-              >
-                Latest changes
-              </Typography>
-
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
-                {recentActivity.map((item) => (
-                  <ActivityItem key={item.label} {...item} />
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid> */}
       <Box
         sx={{
           display: "flex",
@@ -496,7 +452,7 @@ const DashboardD = () => {
           </Card>
         </Box>
 
-        {/* Recent Activity */}
+        {/* Current Subscription — replaces Recent Activity */}
 
         <Box
           sx={{
@@ -506,11 +462,12 @@ const DashboardD = () => {
         >
           <Card sx={{ height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
+
+              {/* Header */}
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent:
-                    "space-between",
+                  justifyContent: "space-between",
                   alignItems: "center",
                   mb: 0.5,
                 }}
@@ -519,14 +476,9 @@ const DashboardD = () => {
                   variant="h6"
                   sx={{ fontSize: "1rem" }}
                 >
-                  Recent Activity
+                  Current Subscription
                 </Typography>
-
-                <Chip
-                  label="Today"
-                  size="small"
-                  color="primary"
-                />
+                <Chip label="Active" size="small" color="success" />
               </Box>
 
               <Typography
@@ -538,23 +490,198 @@ const DashboardD = () => {
                   textTransform: "uppercase",
                 }}
               >
-                Latest changes
+                Plan details
               </Typography>
 
+              {/* Plan badge row */}
               <Box
                 sx={{
                   display: "flex",
-                  flexDirection: "column",
-                  gap: 1.25,
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  px: 2,
+                  py: 1.5,
+                  borderRadius: "10px",
+                  border: `1px solid ${alpha(COLORS.purple, 0.3)}`,
+                  background: alpha(COLORS.purple, 0.07),
+                  mb: 1.5,
                 }}
               >
-                {recentActivity.map((item) => (
-                  <ActivityItem
-                    key={item.label}
-                    {...item}
-                  />
+                <Box>
+                  <Typography
+                    sx={{
+                      fontSize: "0.7rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.07em",
+                      color: COLORS.textMuted,
+                      mb: 0.3,
+                    }}
+                  >
+                    Your plan
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "1.25rem",
+                      fontWeight: 800,
+                      color: COLORS.textPrimary,
+                      letterSpacing: "-0.5px",
+                    }}
+                  >
+                    {subscription.name}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: "20px",
+                    background: `linear-gradient(135deg, ${COLORS.purple}, ${alpha(COLORS.cyan, 0.8)})`,
+                  }}
+                >
+                  <WorkspacePremiumOutlinedIcon sx={{ fontSize: 14, color: "#fff" }} />
+                  <Typography
+                    sx={{
+                      fontSize: "0.72rem",
+                      fontWeight: 700,
+                      color: "#fff",
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    {subscription.name.toUpperCase()}
+                  </Typography>
+                </Box>
+              </Box>
+
+              {/* Info rows */}
+              <Box
+                sx={{
+                  borderRadius: "10px",
+                  border: `1px solid ${COLORS.borderSubtle}`,
+                  background: alpha(COLORS.bgCard, 0.4),
+                  px: 1.5,
+                  mb: 1.5,
+                }}
+              >
+                {[
+                  {
+                    icon: <CalendarTodayOutlinedIcon sx={{ fontSize: 15 }} />,
+                    label: "Billing cycle",
+                    value: plan === "free" ? "Free" : "Monthly",
+                  },
+                  {
+                    icon: <CreditCardOutlinedIcon sx={{ fontSize: 15 }} />,
+                    label: "Amount",
+                    value: `${subscription.price} / month`,
+                  },
+                  {
+                    icon: <LanguageIcon sx={{ fontSize: 15 }} />,
+                    label: "Websites",
+                    value: `${websiteCount} of ${subscription.websiteLimit} used`
+                  },
+                ].map((row, i, arr) => (
+                  <Box key={row.label}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        py: 1,
+                      }}
+                    >
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: COLORS.textMuted }}>
+                        {row.icon}
+                        <Typography variant="body2" sx={{ fontSize: "0.8rem", color: COLORS.textMuted }}>
+                          {row.label}
+                        </Typography>
+                      </Box>
+                      <Typography sx={{ fontSize: "0.82rem", fontWeight: 600, color: COLORS.textPrimary }}>
+                        {row.value}
+                      </Typography>
+                    </Box>
+                    {i < arr.length - 1 && (
+                      <Box sx={{ borderTop: `1px solid ${COLORS.borderSubtle}` }} />
+                    )}
+                  </Box>
                 ))}
               </Box>
+
+              
+
+              {/* Renewal date */}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  px: 2,
+                  py: 1.4,
+                  borderRadius: "10px",
+                  border: `1px solid ${COLORS.borderSubtle}`,
+                  background: alpha(COLORS.bgCard, 0.4),
+                  mb: 1.5,
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Box
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: "8px",
+                      background: alpha(COLORS.cyan, 0.1),
+                      border: `1px solid ${alpha(COLORS.cyan, 0.25)}`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: COLORS.cyan,
+                    }}
+                  >
+                    <AutorenewOutlinedIcon sx={{ fontSize: 16 }} />
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: "0.7rem", color: COLORS.textMuted, mb: 0.2 }}>
+                      Renews on
+                    </Typography>
+                    <Typography sx={{ fontSize: "0.85rem", fontWeight: 600, color: COLORS.textPrimary }}>
+                      {renewalDate}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Chip
+                  label={`${daysLeft}d left`}
+                  size="small"
+                  sx={{
+                    fontSize: "0.72rem",
+                    fontWeight: 600,
+                    background: alpha(COLORS.cyan, 0.1),
+                    color: COLORS.cyan,
+                    border: `1px solid ${alpha(COLORS.cyan, 0.25)}`,
+                  }}
+                />
+              </Box>
+
+              {/* Upgrade button */}
+              <Button
+                fullWidth
+                variant="outlined"
+                sx={{
+                  borderColor: alpha(COLORS.purple, 0.4),
+                  color: COLORS.purple,
+                  fontSize: "0.82rem",
+                  fontWeight: 600,
+                  borderRadius: "8px",
+                  py: 1,
+                  "&:hover": {
+                    borderColor: COLORS.purple,
+                    background: alpha(COLORS.purple, 0.06),
+                  },
+                }}
+              >
+                Upgrade plan
+              </Button>
+
             </CardContent>
           </Card>
         </Box>

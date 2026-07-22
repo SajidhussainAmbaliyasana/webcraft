@@ -1,12 +1,13 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useMeQuery } from "../redux/api/authApi";
+import PageLoader from "../components/PageLoader";
 
 const ProtectedRoutes = () => {
 
     const { data, isLoading, isError } = useMeQuery();
 
     if (isLoading) {
-        return <h1>Loading...</h1>;
+        return <PageLoader/>;
     }
 
     if (isError || !data?.success) {

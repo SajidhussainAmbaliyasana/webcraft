@@ -24,3 +24,21 @@ export const COLORS_MAP = {
   bgCard: "#0f1428",
   bgCardHover: "#141830",
 };
+
+export const SUBSCRIPTION_PLANS = {
+    free: {
+        name: "Free",
+        price: 0,
+        websiteLimit: 2,
+    },
+    pro: {
+        name: "Pro",
+        price: 12,
+        websiteLimit: 10,
+    },
+    business: {
+        name: "Business",
+        price: 29,
+        websiteLimit: 20,
+    },
+};

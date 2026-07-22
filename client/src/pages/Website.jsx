@@ -16,6 +16,8 @@ import WebsiteFormDialog from "../components/WebsiteFormDialog";
 import ConfirmDialog from "../components/common/ConfirmDialog";
 import useSnackbar from "../hooks/useSnackbar";
 import { COLORS } from "../theme";
+import { useMeQuery } from "../redux/api/authApi";
+import { SUBSCRIPTION_PLANS } from "../constants";
 
 // ── Skeleton placeholder while loading ───────────────
 const SkeletonCard = () => (
@@ -49,6 +51,16 @@ const Website = () => {
   const [updateWebsite, { isLoading: updating }] = useUpdateWebsiteMutation();
   const [deleteWebsite, { isLoading: deleting }] = useDeleteWebsiteMutation();
   const [publishWebsite, { isLoading: publishing }] = usePublishWebsiteMutation();
+  const { data: userData } = useMeQuery();
+
+  const subscription =
+    userData?.data?.subscription || "free";
+
+  // const websiteCount =
+  //   userData?.data?.websiteCount || 0;
+
+  const websiteLimit =
+    SUBSCRIPTION_PLANS[subscription]?.websiteLimit || 2;
 
   const websites = (data?.websites || []).map((website) => ({
     ...website,
@@ -70,6 +82,14 @@ const Website = () => {
   // ── Handlers ──────────────────────────────────────
   const handleCreate = async (form) => {
     try {
+
+      if (websites.length >= websiteLimit) {
+        notify.error(
+          `You can only create ${websiteLimit} websites on your current plan`
+        );
+        return;
+      }
+
       const payload = {
         name: form.name,
         slug: form.subdomain,
@@ -80,6 +100,7 @@ const Website = () => {
 
       notify.success(response.message);
       setCreateOpen(false);
+
     } catch (err) {
       notify.error(
         err?.data?.message || "Failed to create website."
