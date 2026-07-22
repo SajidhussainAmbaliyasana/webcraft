@@ -33,12 +33,12 @@ export const SUBSCRIPTION_PLANS = {
     },
     pro: {
         name: "Pro",
-        price: 12,
+        price: 29,
         websiteLimit: 10,
     },
     business: {
         name: "Business",
-        price: 29,
+        price: 89,
         websiteLimit: 20,
     },
 };

@@ -44,7 +44,8 @@ const PaymentSuccess = () => {
                     }).unwrap();
 
                 notify.success(
-                    response.message
+                    //response.message
+                    "Payment Done"
                 );
 
                 navigate(

@@ -25,6 +25,7 @@ import {
   useDeleteAccountMutation,
   useCreateCheckoutSessionMutation
 } from "../redux/api/authApi";
+import { SUBSCRIPTION_PLANS } from "../constants";
 
 // ─── helpers ──────────────────────────────────────────
 const accent = {
@@ -92,9 +93,30 @@ const PlanCard = ({ name, price, badge, badgeColor, features, isCurrent, isFeatu
       }}
     />
     <Typography sx={{ fontSize: "0.875rem", fontWeight: 600, color: "#e2e8f0" }}>{name}</Typography>
-    <Typography sx={{ fontSize: "1.375rem", fontWeight: 700, color: "#f1f5f9", letterSpacing: "-0.05em", mt: 0.25 }}>
+    {/* <Typography sx={{ fontSize: "1.375rem", fontWeight: 700, color: "#f1f5f9", letterSpacing: "-0.05em", mt: 0.25 }}>
       {price}<Typography component="span" sx={{ fontSize: "0.75rem", fontWeight: 400, color: "#475569" }}>/mo</Typography>
-    </Typography>
+    </Typography> */}
+    <Typography
+  sx={{
+    fontSize: "1.375rem",
+    fontWeight: 700,
+    color: "#f1f5f9",
+    letterSpacing: "-0.05em",
+    mt: 0.25,
+  }}
+>
+  ${price}
+  <Typography
+    component="span"
+    sx={{
+      fontSize: "0.75rem",
+      fontWeight: 400,
+      color: "#475569",
+    }}
+  >
+    /mo
+  </Typography>
+</Typography>
     <Divider sx={{ my: 1.25, borderColor: "rgba(255,255,255,0.05)" }} />
     {features.map(({ label, included }) => (
       <Box key={label} sx={{ display: "flex", alignItems: "center", gap: 0.75, mb: 0.75 }}>
@@ -312,39 +334,78 @@ const SettingsPage = () => {
     business: 2,
   };
 
+  // const PLANS = [
+  //   {
+  //     name: "Free", price: "$0", badge: "Current", badgeColor: accent.cyan,
+  //     isCurrent: profile.subscription?.plan === "free",
+  //     features: [
+  //       { label: "50 tasks / month", included: true },
+  //       { label: "1 workspace", included: true },
+  //       { label: "Analytics", included: false },
+  //       { label: "Priority support", included: false },
+  //     ],
+  //   },
+  //   {
+  //     name: "Pro", price: "$12", badge: "Popular", badgeColor: accent.purple, isFeatured: true,
+  //     isCurrent: profile.subscription?.plan === "pro",
+  //     features: [
+  //       { label: "Unlimited tasks", included: true },
+  //       { label: "5 workspaces", included: true },
+  //       { label: "Analytics", included: true },
+  //       { label: "Priority support", included: false },
+  //     ],
+  //   },
+  //   {
+  //     name: "Business", price: "$29", badge: "Teams", badgeColor: accent.amber,
+  //     isCurrent: profile.subscription?.plan === "business",
+  //     features: [
+  //       { label: "Unlimited tasks", included: true },
+  //       { label: "Unlimited workspaces", included: true },
+  //       { label: "Advanced analytics", included: true },
+  //       { label: "Priority support", included: true },
+  //     ],
+  //   },
+  // ];
+  
   const PLANS = [
-    {
-      name: "Free", price: "$0", badge: "Current", badgeColor: accent.cyan,
-      isCurrent: profile.subscription?.plan === "free",
-      features: [
-        { label: "50 tasks / month", included: true },
-        { label: "1 workspace", included: true },
-        { label: "Analytics", included: false },
-        { label: "Priority support", included: false },
-      ],
-    },
-    {
-      name: "Pro", price: "$12", badge: "Popular", badgeColor: accent.purple, isFeatured: true,
-      isCurrent: profile.subscription?.plan === "pro",
-      features: [
-        { label: "Unlimited tasks", included: true },
-        { label: "5 workspaces", included: true },
-        { label: "Analytics", included: true },
-        { label: "Priority support", included: false },
-      ],
-    },
-    {
-      name: "Business", price: "$29", badge: "Teams", badgeColor: accent.amber,
-      isCurrent: profile.subscription?.plan === "business",
-      features: [
-        { label: "Unlimited tasks", included: true },
-        { label: "Unlimited workspaces", included: true },
-        { label: "Advanced analytics", included: true },
-        { label: "Priority support", included: true },
-      ],
-    },
-  ];
-
+  {
+    ...SUBSCRIPTION_PLANS.free,
+    badge: "Current",
+    badgeColor: accent.cyan,
+    isCurrent: currentPlan === "free",
+    features: [
+      { label: `Up to ${SUBSCRIPTION_PLANS.free.websiteLimit} websites`, included: true },
+      { label: "AI Content Generation", included: true },
+      { label: "Custom Domain", included: false },
+      { label: "Priority Support", included: false },
+    ],
+  },
+  {
+    ...SUBSCRIPTION_PLANS.pro,
+    badge: "Popular",
+    badgeColor: accent.purple,
+    isFeatured: true,
+    isCurrent: currentPlan === "pro",
+    features: [
+      { label: `Up to ${SUBSCRIPTION_PLANS.pro.websiteLimit} websites`, included: true },
+      { label: "AI Content Generation", included: true },
+      { label: "Custom Domain", included: true },
+      { label: "Priority Support", included: false },
+    ],
+  },
+  {
+    ...SUBSCRIPTION_PLANS.business,
+    badge: "Teams",
+    badgeColor: accent.amber,
+    isCurrent: currentPlan === "business",
+    features: [
+      { label: `Up to ${SUBSCRIPTION_PLANS.business.websiteLimit} websites`, included: true },
+      { label: "AI Content Generation", included: true },
+      { label: "Custom Domain", included: true },
+      { label: "Priority Support", included: true },
+    ],
+  },
+];
 
 
   return (

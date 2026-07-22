@@ -174,23 +174,12 @@ const LoginBox = () => {
                 </Button>
             </Box>
 
-            <Divider sx={{ my: 4 }}>
+            {/* <Divider sx={{ my: 4 }}>
                 <Typography variant="caption">or continue with</Typography>
-            </Divider>
+            </Divider> */}
 
             {/* Placeholder OAuth buttons */}
-            <Box sx={{ display: "flex", gap: 1.5 }}>
-                {["Google", "GitHub"].map((provider) => (
-                    <Button
-                        key={provider}
-                        variant="outlined"
-                        fullWidth
-                        sx={{ height: 44, fontFamily: "'DM Mono', monospace", fontSize: "0.78rem" }}
-                    >
-                        {provider}
-                    </Button>
-                ))}
-            </Box>
+            
         </>
     )
 }

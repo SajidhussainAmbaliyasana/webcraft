@@ -666,6 +666,7 @@ if (startedAt && expiresAt) {
               <Button
                 fullWidth
                 variant="outlined"
+                onClick={() => navigate("/dashboard/settings")}
                 sx={{
                   borderColor: alpha(COLORS.purple, 0.4),
                   color: COLORS.purple,
